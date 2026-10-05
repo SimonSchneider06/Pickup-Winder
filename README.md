@@ -2,7 +2,7 @@
 
 Die Maschine wurde für [Apollon Guitars](https://www.apollonguitars.de/) gebaut. 
 
-Auf der Website kann man auch im Blogartikel [Die Tonabnehmerwickelmaschine](https://www.apollonguitars.de/blog/die-tonabnehmerwickelmaschine) mehr zur Maschine finden.
+Auf der Website kann man auch im Blogartikel [Die Tonabnehmerwickelmaschine](https://www.apollonguitars.de/blog/tonabnehmerwickelmaschine) mehr zur Maschine finden.
 
 ## Kurze Einführung
 Bevor gewickelt werden kann, müssen alle Settings in Config.h angepasst werden. Was die einzelnen
