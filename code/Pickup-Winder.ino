@@ -48,6 +48,7 @@ double usekPerPulseX;
 
 int distanceX;    // the distance for the x-axis to move
 double XAxisRows; // the number of rows the x-axis has to move
+double actualWindings;  // the actual number of windings, since the machine does only full rows.
 
 // wind motor
 int writeWindRPM;
@@ -60,7 +61,7 @@ double calculateStepSetup();
 int moveStepperPerTimeStep();
 void securityStop();
 void countRPM();
-
+double calculateActualWindNumberFromRows(double xAxisRows);
 
 void setup() {
   
@@ -94,6 +95,8 @@ void setup() {
   usekPerPulseX = ceil(calculateStepSetup());       //calculate PulseTime for X-Axis, round up, so no error
   XAxisRows = round(calculateXAxisRowCount());      // only does full rows, rounds RowCount
   distanceX = PICKUP_WINDING_HEIGHT;  // distance the Motor has to move per Row
+  actualWindings = calculateActualWindNumberFromRows(XAxisRows);  // machine does only full rows
+
 
   // start turing motor with specific rpm
   writeWindRPM = map(WIND_RPM,0,4728,0,255);
@@ -107,13 +110,16 @@ void setup() {
   Serial.print("\n==Start of Programm==\n");
   Serial.print("RPM:\t");
   Serial.print(WIND_RPM);
-  Serial.print("\tNumber of Windings:\t");
+  Serial.print("\tcalibrated Number of Windings:\t");
   Serial.print(WINDING_NUMB);
+  Serial.print("\tactual Number of Windings:\t");
+  Serial.print(actualWindings);
   Serial.print("\tNumber of Rows:\t");
   Serial.print(XAxisRows);
   Serial.print("\tPulse Time:\t");
   Serial.print(usekPerPulseX);
   Serial.print(" us\n");
+  Serial.print("\tSince the machine only does full rows, the actual winding number is slightly different than the calibrated number\n");
   
 
   SecurityStopIn = 0; // initialize security stop
@@ -149,7 +155,7 @@ void loop() {
   if(XAxisRows > 0){
 
     posX = moveDistance(posX,distanceX);    // move forward or backwards, depending
-    distanceX = distanceX * (-1);           // toggles direction
+    distanceX = distanceX * (-1);           // toggles direction, value = PICKUP_WINDING_HEIGHT
     //Serial.print(posX);
     XAxisRows--;
   }
@@ -261,6 +267,28 @@ double calculateXAxisRowCount(){
 
 }
 
+
+/**
+  * Calculates the actual windings, since the machine does only full rows
+  *
+  * @return the number of windings
+  *
+*/
+double calculateActualWindNumberFromRows(double xAxisRows){
+  /* Formulas:
+
+    I)  Number_of_Rows * Number_of_Winds_Per_Row = WINDING_NUMB
+    II) Number_of_Winds_Per_Row = PICKUP_WINDING_HEIGHT / WIRE_DIAMETER
+
+    eq. II) inserted to solve: Number_of_Rows * PICKUP_WINDING_HEIGHT / WIRE_DIAMETER
+
+    --> written in one line to prevent rounding errors:
+    actual WINDING_NUMB = Number_of_Rows * PICKUP_WINDING_HEIGHT / WIRE_DIAMETER
+    units: (1)          =      (1)       *      um       /          um
+  */
+
+  return xAxisRows * PICKUP_WINDING_HEIGHT / WIRE_DIAMETER;
+}
 
 
 /**

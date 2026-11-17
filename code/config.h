@@ -23,11 +23,12 @@
 // these values depend on your wire and pickup dimensions
 // for more information on where the values get measured, check the documentation
 #define WIRE_DIAMETER 63.0  //um -> 0.063mm
-#define PICKUP_BOTTOM_PLATE_THICKNESS 4500 //measured, in um, Its actually 4000, but leave some security room 
-#define PICKUP_WINDING_HEIGHT 14000 //measured, in um, Its actually 15000 but leave some security room
+#define PICKUP_BOTTOM_PLATE_THICKNESS 2000 //measured, in um, Its actually 1700, but leave some security room 
+#define PICKUP_COIL_HEIGHT 6000 // actual measured value
+#define PICKUP_WINDING_HEIGHT (PICKUP_COIL_HEIGHT - PICKUP_WIND_HEIGHT_OFFSET) // so the wire gets distributed equally among the pickup | parentheses are neseccary!!!
 
 #define WINDING_NUMB 5000 // number of how many windings the machine does
-#define WIND_RPM 1500  // How fast the winding motor spins
+#define WIND_RPM 400  // How fast the winding motor spins
 
 
 /*
@@ -68,8 +69,12 @@
 
 #define SPINDLE_LENGTH 150000 // in um (=15cm length), needed to stop the motor before going
 
+// ==== OFFSETS ====
 //how far the surface of the actual turning plate - where the pickup is mounted - is away from the zero position of the x-axis
-#define PLATE_OFFSET 3000 // the position from absolute 0 to where the plate is
+#define PLATE_OFFSET 8500 // the position from absolute 0 to where the plate is
+
+// in order for the x-axis to not overshoot, so the wire is equally distributed among the entire length
+#define PICKUP_WIND_HEIGHT_OFFSET 1000 // subract this value from the actual PICKUP_COIL_HEIGHT
 
 
 
